@@ -12,25 +12,27 @@ library(shinyWidgets)
 library(ggplot2)
 library(DT)
 library(dplyr)
-
+# load data 
 data <- read.csv(file='guns.csv', header=TRUE)
 
 
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
+  # background setting
   setBackgroundImage(
     src = "https://www.blackknightinc.com/wp-content/uploads/2019/10/data-transfer.jpg"
   ),
     # Application title
     titlePanel("Gun Deaths in the US: 2012-2014"),
+    # doanload button setting
     downloadLink("downloadData", "Download Data"),
 
-    # Sidebar with a slider input for number of bins 
+    # Sidebar setting 
     sidebarLayout(
         sidebarPanel(
 
-          # Select which types of movies to plot ------------------------
+          # Select which types of place to plot ------------------------
           checkboxGroupInput(inputId = "selected_place",
                              label = "Select Course Difficulty:",
                              choices = c("Home", "Street", "Other specified"),
@@ -68,9 +70,9 @@ ui <- fluidPage(
   )
 
 
-# Define server logic required to draw a histogram
+# server setting
 server <- function(input, output,session) {
-  # Create a subset of data filtering for selected title types ------
+  # Create a subset of data filtering for selected year and place ------
   data_subset <- reactive({
     req(input$selected_place) # ensure availablity of value before proceeding
     data%>%
@@ -88,7 +90,7 @@ server <- function(input, output,session) {
     )
   })
   
-  # Create new df that is n_samp obs from selected type courses ------
+  # Create new df that is n_samp obs from selected data ------
   data_sample <- reactive({ 
     req(input$n_samp) # ensure availablity of value before proceeding
     sample_n(data_subset(), input$n_samp)
